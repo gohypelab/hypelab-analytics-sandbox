@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flash Notice Demo</title>
+    <!-- Include Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      !(function (h, y, p, e, l, a, b) {
+        ((a = document.createElement(h)).async = !0),
+          (a.src = y),
+          (a.onload = function () {
+            (l = new HypeLabAnalytics.Client({
+              environment: p,
+              propertySlug: e,
+              ...l,
+            })),
+              HypeLabAnalytics.setClient(l);
+          }),
+          (b = document.getElementsByTagName(h)[0]).parentNode.insertBefore(a, b);
+      })('script', 'https://api.hypelab.com/v1/scripts/ha-sdk.js?v=0', 'production', 'hypelab', {
+        privacy: { trackAllSessions: true },
+      });
+    </script>
+
+    <!-- Include Tailwind configuration -->
+    <script src="tailwind-config.js"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="text-center">
+      <button
+        id="showNotice"
+        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105"
+      >
+        Deposit
+      </button>
+
+      <!-- Flash notice element (hidden by default) -->
+      <div
+        id="flashNotice"
+        class="fixed top-5 left-1/2 transform -translate-x-1/2 py-3 px-6 rounded-lg bg-green-500 text-white shadow-lg opacity-0 transition-opacity duration-300 z-50"
+      >
+        Deposit completed successfully!
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const button = document.getElementById('showNotice');
+        const flashNotice = document.getElementById('flashNotice');
+
+        button.addEventListener('click', function () {
+          // Show the flash notice
+          flashNotice.classList.remove('opacity-0');
+          flashNotice.classList.add('opacity-100');
+
+          // Track the deposit event
+          if (typeof HypeLabAnalytics !== 'undefined') {
+            HypeLabAnalytics.logEvent('first_deposit');
+          }
+          // Hide the flash notice after 3 seconds
+          setTimeout(function () {
+            flashNotice.classList.remove('opacity-100');
+            flashNotice.classList.add('opacity-0');
+          }, 3000);
+        });
+      });
+    </script>
+  </body>
+</html>
